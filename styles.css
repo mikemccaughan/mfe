@@ -1,0 +1,213 @@
+* {
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 100%;
+    font-family: sans-serif;
+}
+
+body {
+    margin: 0;
+}
+
+header {
+    background-color: indigo;
+    color: white;
+}
+
+header h1 {
+    margin: 0;
+    padding: 1rem 0.5rem 0.5rem 0.5rem;
+}
+
+header a {
+    color: white;
+    text-decoration: none;
+}
+
+.top {
+    background-color: darkmagenta;
+    color: white;
+}
+
+.top a {
+    color: white;
+    text-decoration: none;
+}
+
+main {
+    max-width: 70vw;
+    margin: 0 auto;
+}
+
+.hamburger {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+}
+
+.hamburger line {
+    stroke: white;
+    shape-rendering: crispedges;
+}
+
+
+.hero {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    height: 25vh;
+    background-color: dodgerblue;
+}
+
+.flyout {
+    display: none;
+}
+
+.flyout[aria-expanded="true"] {
+    display: flex;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 25vw;
+    height: calc(100vh - 2px);
+    background-color: white;
+    border: 1px solid;
+    z-index: 3;
+}
+
+.flyout-overlay {
+    display: none;
+}
+
+.flyout[aria-expanded="true"] + .flyout-overlay {
+    display: block;
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 2;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.flyout[aria-expanded="true"] .flyout-toggle {
+    position: absolute;
+    top: 0;
+    left: 25vw;
+    color: #fff;
+    padding: 0.5rem;
+}
+
+.flyout-item {
+    display: flex;
+    flex-flow: row wrap;
+}
+
+.top a.flyout-item {
+    color: black;
+}
+
+.flyout-item.flyout-item-has-more {
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+    max-height: 24px;
+    width: 100%;
+    padding: 0.25rem 0.5rem;
+}
+
+.more {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    margin: 7px 0;
+}
+
+.sr-only {
+    position: absolute;
+    left: -1000px;
+}
+
+.hero-nav {
+    display: block;
+    width: 40px;
+    height: 40px;
+    align-self: center;
+    padding: 1rem;
+}
+
+.price > span.original {
+    text-decoration: line-through;
+    font-size: 2.5rem;
+    margin-right: 1rem;
+}
+
+.price > span {
+    font-size: 3rem;
+    display: flex;
+    height: 3rem;
+    align-items: flex-start;
+}
+
+.cur {
+    font-size: 1.5rem;
+    padding-top: 0.4rem;
+}
+
+.price {
+    display: flex;
+    flex-flow: row nowrap;
+}
+
+.dec {
+    font-size: 1.5rem;
+    padding-top: 0.4rem;
+}
+
+.original .cur {
+    font-size: 1rem;
+}
+
+.original .dec {
+    font-size: 1rem;
+}
+
+.current a {
+    color: currentcolor;
+    text-decoration: none;
+}
+
+.top {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.top-item {
+    color: currentColor;
+    text-decoration: none;
+    border: 1px solid transparent;
+    padding: 1rem 0.75rem 0.5rem;
+}
+
+.top-item:hover {
+    border-color: currentColor;
+}
+
+.hero-nav line {
+    stroke-width: 2px;
+    stroke-linejoin: miter;
+    stroke-linecap: butt;
+}
+
+.dark {
+    stroke: black;
+}
+
+.light {
+    stroke: white;
+}

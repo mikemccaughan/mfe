@@ -1,0 +1,50 @@
+{
+    "products": [
+        {
+            "id": 0,
+            "name": "ASTRO Gaming A50 Wireless Headset + Base Station Gen 4 - Compatible with Xbox Series X|S, Xbox One, PC, Mac - Black/Gold",
+            "description": "Experience legendary performance and sound of astro audio V2, with the convenience and freedom that comes without wires. The A50 wireless + base station for Xbox Series X|S, Xbox one & PC delivers premium acoustics (Dolby Atmos), ergonomics, comfort and durability that gamers demand. The all-new base station provides clear, low-latency voice communication, while making headset pairing and charging simple. The astro command center software allows pros and streamers to tune every input and output parameter of the A50 precisely for their specific setup. For even more flexibility, The optional A50 mod kit allows users to add synthetic leather headband ear cushions for improved noise isolation. Experience absolute audio immersion with the A50 wireless + base station.",
+            "originalPrice": 299.99,
+            "currentPrice": 299.99
+        },
+        {
+            "id": 1,
+            "name": "Johnny Dangerously",
+            "description": "A New York pet-store owner recalls how he turned to crime and became a big-time gangster.",
+            "originalPrice": 9.98,
+            "currentPrice": 4.99
+        },
+        {
+            "id": 2,
+            "name": "Yubico YubiKey 5 Nano - Two Factor Authentication USB Security Key, Fits USB-A Ports - Protect Your Online Accounts with More Than a Password, FIDO Certified USB Password Key, Extra Compact Size",
+            "description": "The YubiKey 5 Nano combines hardware-based authentication and public key cryptography to protect against account takeovers. Simply insert into a USB slot and authenticate with a touch. YubiKey 5 authentication is four times faster than typing a One Time Passcode and does not require a battery nor network connectivity so it is always accessible.",
+            "originalPrice": 50.00,
+            "currentPrice": 50.00,
+            "similarProducts": [3,4,5]
+        },
+        {
+            "id": 3,
+            "name": "Yubico - YubiKey 5C Nano - Two Factor Authentication USB Security Key, Fits USB-C Ports - Protect Your Online Accounts with More Than a Password, FIDO Certified USB Password Key, Extra Compact Size",
+            "description": "The YubiKey 5C Nano combines hardware-based authentication and public key cryptography to eliminate account takeovers. Simply insert into a USB-C slot and authenticate with a touch. YubiKey 5 authentication is four times faster than typing a One Time Passcode and does not require a battery nor network connectivity so it is always on and accessible.",
+            "originalPrice": 60.00,
+            "currentPrice": 60.00,
+            "similarProducts": [2,4,5]
+        },
+        {
+            "id": 4,
+            "name": "Yubico - YubiKey 5 NFC - Two Factor Authentication USB and NFC Security Key, Fits USB-A Ports and Works with Supported NFC Mobile Devices - Protect Your Online Accounts with More Than a Password",
+            "description": "<ul><li>SECURITY KEY: Protect your online accounts against unauthorized access by using 2 factor authentication with the Yubico YubiKey 5 NFC security key. It's the world's most protective USB and NFC security key that works with more online services/apps than any other.</li><li>FIDO: The YubiKey 5 NFC is FIDO certified and works with Google Chrome and any FIDO-compliant application on Windows, Mac OS or Linux. Secure your login and protect your Gmail, Facebook, Dropbox, Outlook, LastPass accounts and more.</li><li>FITS USB-A PORTS: Once registered, each service will request you to insert the YubiKey PC security key into a USB-A port and tap to gain access. NFC-ENABLED: Also get touch-based authentication for NFC supported Android and iOS devices and applications. Just tap & go!</li><li>DURABLE AND SECURE: Extremely secure and durable, YubiKeys are tamper resistant, water resistant, and crush resistant. The YubiKey 5 NFC USB is designed to protect your online accounts from phishing and account takeovers. Proudly made in the USA.</li><li>MULTI-PROTOCOL SUPPORT: The YubiKey USB authenticator includes NFC and has multi-protocol support including FIDO2, FIDO U2F, Yubico OTP, OATH-TOTP, OATH-HOTP, Smart card (PIV), OpenPGP, and Challenge-Response capability to give you strong hardware-based authentication.</li></ul>",
+            "originalPrice": 45.00,
+            "currentPrice": 45.00,
+            "similarProducts": [2,3,5]
+        },
+        {
+            "id": 5,
+            "name": "Yubico - YubiKey 5Ci - Two-Factor authentication Security Key for Android/PC/iPhone, Dual connectors for Lighting/USB-C - FIDO Certified",
+            "description": "The USB-C connection of the YubiKey 5Ci works with a wide range of services including: Google, Microsoft Accounts, Dropbox, Facebook, Twitter, GitHub, Keeper Security, and more. Support for the Lightning connection of the YubiKey 5Ci is currently emerging with a growing number of iOS apps, including 1Password, Bitwarden, Keeper Security, LastPass, and Okta, as well as a number of services through the Brave browser. Supported logins on the Brave browser include Twitter.com, Login.gov, GitHub.com, Bitbucket.org, and 1Password.com. Learn more about the services that work with YubiKey 5Ci's Lightning connector in our Works with YubiKey catalog.",
+            "originalPrice": 70.00,
+            "currentPrice": 70.00,
+            "similarProducts": [2,3,4]
+        }
+    ]
+}
