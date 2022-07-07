@@ -12,5 +12,6 @@
         "strict": true,
         "target": "ES2021",
         "useDefineForClassFields": false
-    }
+    },
+    "exclude": ["node_modules"]
 }

@@ -11,14 +11,32 @@ body {
     margin: 0;
 }
 
+[hidden],
+section[hidden],
+section[hidden].hero,
+product-display[hidden] {
+    display: none;
+}
+
 header {
     background-color: indigo;
     color: white;
+    display: flex;
+    justify-content: space-between;
 }
 
-header h1 {
+header > h1 {
     margin: 0;
     padding: 1rem 0.5rem 0.5rem 0.5rem;
+    flex: 0 0 25%;
+}
+
+header > search-search {
+    flex: 1 0 50%;
+}
+
+header > checkout-cart {
+    flex: 0 0 25%;
 }
 
 header a {
@@ -136,7 +154,6 @@ main {
     width: 40px;
     height: 40px;
     align-self: center;
-    padding: 1rem;
 }
 
 .price > span.original {

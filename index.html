@@ -1,76 +1,118 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Micro Front-End paired with Microservices</title>
-        <link rel="stylesheet" href="index.css" type="text/css"/>
-        <script src="index.js" type="module"></script>
-        <script type="module">
-            import { default as Flyout } from './index.js';
-            const flyout = new Flyout('.flyout-container');
-        </script>
-    </head>
-    <body>
-        <header>
-            <h1><span class="logo">Heretic-Monkey Store</span></h1>
-            <search type="header"></search>
-            <checkout-cart type="header"></checkout-cart>
-        </header>
-        <nav class="top">
-            <div class="flyout-container top-item">
-                <a href="#nav-flyout" class="flyout-toggle" title="Opens flyout menu listing all categories">
-                    <span class="hamburger">
-                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <line x1="0" y1="6" x2="24" y2="6" stroke="black" stroke-linecap="round" />
-                            <line x1="0" y1="12" x2="24" y2="12" stroke="black" stroke-linecap="round" />
-                            <line x1="0" y1="18" x2="24" y2="18" stroke="black" stroke-linecap="round" />
-                        </svg>
-                    </span>
-                    <span class="flyout-toggle-text">All</span>
-                </a>
-                <nav class="flyout" id="nav-flyout">
-                    <a href="#nav-flyout" class="flyout-toggle" title="Closes flyout menu">X</a>
-                    <a href="#contact" class="flyout-item flyout-item-has-more">
-                        <span class="flyout-item-text">Contact</span>
-                        <svg viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg" class="more">
-                            <line x1="0" y1="0" x2="5" y2="5" stroke="black" />
-                            <line x1="5" y1="5" x2="0" y2="10" stroke="black" />
-                        </svg>
-                    </a>
-                </nav>
-                <div class="flyout-overlay"></div>
-            </div>
-            <a href="#deals" class="top-item">Deals</a>
-            <a href="#bestsellers" class="top-item">Best Sellers</a>
-            <a href="#giftcards" class="top-item">Gift Cards</a>
-        </nav>
-        <main>
-            <section class="hero">
-                <a href="#prev-hero" class="hero-nav prev">
-                    <svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
-                        <line x1="0" y1="25" x2="25" y2="0" class="dark" />
-                        <line x1="0" y1="25" x2="25" y2="50" class="dark" />
-                        <line x1="2" y1="25" x2="26" y2="2" class="light" />
-                        <line x1="2" y1="25" x2="26" y2="48" class="light" />
+
+<head>
+    <title>Micro Front-End paired with Microservices</title>
+    <link rel="stylesheet" href="index.css" type="text/css" />
+    <script src="behavior.js" type="module"></script>
+    <script src="search/frontend/SearchComponent.js" type="module"></script>
+    <script type="module">
+        import { default as Flyout } from './behavior.js';
+        const flyout = new Flyout('.flyout-container');
+        function loadProductIfNeeded(url) {
+            const newUrl = new URL(url);
+            if (newUrl.hash.includes('product?id=')) {
+                const productId = newUrl.hash.replace('#product?id=', '');
+                import("http://localhost:1234/product/frontend/GalleryComponent.js").then((Gallery) => {
+                    import("http://localhost:1234/product/frontend/ProductComponent.js").then((Product) => {
+                        const hero = document.querySelector('section.hero');
+                        if (hero != null) {
+                            hero.hidden = true;
+                        }
+                        const productDisplay = document.querySelector('product-display');
+                        if (productDisplay != null) {
+                            productDisplay.hidden = false;
+                            productDisplay.setAttribute('data-product-id', productId);
+                        }
+                    });
+                });
+            } else {
+                const hero = document.querySelector('section.hero');
+                if (hero != null) {
+                    hero.hidden = false;
+                }
+                const productDisplay = document.querySelector('product-display');
+                if (productDisplay != null) {
+                    productDisplay.hidden = true;
+                    productDisplay.removeAttribute('data-product-id');
+                }
+            }
+        }
+        window.addEventListener('hashchange', (ev) => {
+            loadProductIfNeeded(ev.newURL);
+        });
+        window.addEventListener('load', (ev) => {
+            loadProductIfNeeded(location.href);
+        });
+    </script>
+</head>
+
+<body>
+    <header>
+        <h1><span class="logo">Heretic-Monkey Store</span></h1>
+        <search-search type="header"></search-search>
+        <checkout-cart type="header"></checkout-cart>
+    </header>
+    <nav class="top">
+        <div class="flyout-container top-item">
+            <a href="#nav-flyout" class="flyout-toggle" title="Opens flyout menu listing all categories">
+                <span class="hamburger">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <line x1="0" y1="6" x2="24" y2="6" stroke="black" stroke-linecap="round" />
+                        <line x1="0" y1="12" x2="24" y2="12" stroke="black" stroke-linecap="round" />
+                        <line x1="0" y1="18" x2="24" y2="18" stroke="black" stroke-linecap="round" />
+                    </svg>
+                </span>
+                <span class="flyout-toggle-text">All</span>
+            </a>
+            <nav class="flyout" id="nav-flyout">
+                <a href="#nav-flyout" class="flyout-toggle" title="Closes flyout menu">X</a>
+                <a href="#contact" class="flyout-item flyout-item-has-more">
+                    <span class="flyout-item-text">Contact</span>
+                    <svg viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg" class="more">
+                        <line x1="0" y1="0" x2="5" y2="5" stroke="black" />
+                        <line x1="5" y1="5" x2="0" y2="10" stroke="black" />
                     </svg>
                 </a>
-                <div class="current">
-                    <h2><a href="index.html?product=1">Product 1</a></h2>
-                    <div class="price">
-                        <span class="original"><span class="cur">$</span><span class="amt">99</span><span class="dec">99</span></span>
-                        <span class="sale"><span class="cur">$</span><span class="amt">74</span><span class="dec">99</span></span>
-                    </div>
-                    <div class="pic"></div>
+            </nav>
+            <div class="flyout-overlay"></div>
+        </div>
+        <a href="#deals" class="top-item">Deals</a>
+        <a href="#bestsellers" class="top-item">Best Sellers</a>
+        <a href="#giftcards" class="top-item">Gift Cards</a>
+    </nav>
+    <main>
+        <section class="hero">
+            <a href="#prev-hero" class="hero-nav prev">
+                <svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
+                    <line x1="0" y1="25" x2="25" y2="0" class="dark" />
+                    <line x1="0" y1="25" x2="25" y2="50" class="dark" />
+                    <line x1="2" y1="25" x2="26" y2="2" class="light" />
+                    <line x1="2" y1="25" x2="26" y2="48" class="light" />
+                </svg>
+            </a>
+            <div class="current">
+                <h2><a href="index.html?product=1">Product 1</a></h2>
+                <div class="price">
+                    <span class="original"><span class="cur">$</span><span class="amt">99</span><span
+                            class="dec">99</span></span>
+                    <span class="sale"><span class="cur">$</span><span class="amt">74</span><span
+                            class="dec">99</span></span>
                 </div>
-                <a href="#next-hero" class="hero-nav next">
-                    <svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
-                        <line x1="25" y1="0" x2="50" y2="25" class="dark" />
-                        <line x1="25" y1="50" x2="50" y2="25" class="dark" />
-                        <line x1="24" y1="2" x2="48" y2="25" class="light" />
-                        <line x1="24" y1="48" x2="48" y2="25" class="light" />
-                    </svg>
-                </a>
-            </section>
-        </main>
-        <footer></footer>
-    </body>
+                <div class="pic"></div>
+            </div>
+            <a href="#next-hero" class="hero-nav next">
+                <svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
+                    <line x1="25" y1="0" x2="50" y2="25" class="dark" />
+                    <line x1="25" y1="50" x2="50" y2="25" class="dark" />
+                    <line x1="24" y1="2" x2="48" y2="25" class="light" />
+                    <line x1="24" y1="48" x2="48" y2="25" class="light" />
+                </svg>
+            </a>
+        </section>
+        <product-display hidden="true"></product-display>
+    </main>
+    <footer></footer>
+</body>
+
 </html>
