@@ -11,6 +11,9 @@ server.on('request', async (req, res) => {
     if (url.pathname.length <= 1) {
         localPath = path.resolve('index.html');
     } 
+    if (url.pathname.includes('mongodb')) {
+        localPath = path.resolve(path.join('node_modules', 'bson', 'dist', 'bson.browser.esm.js'));
+    }
     console.log(`Attempting to read ${localPath}`);
     try {
         var file = await fs.readFile(localPath, 'utf-8');

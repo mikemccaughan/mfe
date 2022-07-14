@@ -9,23 +9,22 @@
     <script type="module">
         import { default as Flyout } from './behavior.js';
         const flyout = new Flyout('.flyout-container');
-        function loadProductIfNeeded(url) {
+        async function loadProductIfNeeded(url) {
             const newUrl = new URL(url);
             if (newUrl.hash.includes('product?id=')) {
                 const productId = newUrl.hash.replace('#product?id=', '');
-                import("http://localhost:1234/product/frontend/GalleryComponent.js").then((Gallery) => {
-                    import("http://localhost:1234/product/frontend/ProductComponent.js").then((Product) => {
-                        const hero = document.querySelector('section.hero');
-                        if (hero != null) {
-                            hero.hidden = true;
-                        }
-                        const productDisplay = document.querySelector('product-display');
-                        if (productDisplay != null) {
-                            productDisplay.hidden = false;
-                            productDisplay.setAttribute('data-product-id', productId);
-                        }
-                    });
-                });
+                await import("http://localhost:1234/product/frontend/GalleryComponent.js");
+                await import("http://localhost:1234/product/frontend/ProductComponent.js");
+                await import("http://localhost:1234/checkout/frontend/CartComponent.js");
+                const hero = document.querySelector('section.hero');
+                if (hero != null) {
+                    hero.hidden = true;
+                }
+                const productDisplay = document.querySelector('product-display');
+                if (productDisplay != null) {
+                    productDisplay.hidden = false;
+                    productDisplay.setAttribute('data-product-id', productId);
+                }
             } else {
                 const hero = document.querySelector('section.hero');
                 if (hero != null) {
@@ -51,7 +50,7 @@
     <header>
         <h1><span class="logo">Heretic-Monkey Store</span></h1>
         <search-search type="header"></search-search>
-        <checkout-cart type="header"></checkout-cart>
+        <checkout-cart type="header" cart-id="62cf26a5991807ba4e49be67"></checkout-cart>
     </header>
     <nav class="top">
         <div class="flyout-container top-item">

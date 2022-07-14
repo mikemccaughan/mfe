@@ -249,7 +249,7 @@ export class Search extends HTMLElement {
             return;
         } else {
             // outside the shadow DOM, close the autocomplete
-            const output = this.shadowRoot?.querySelector('output');
+            const output = this.getOutput();
             if (output != null) {
                 output.hidden = true;
             }
@@ -279,10 +279,14 @@ export class Search extends HTMLElement {
         };
     }
     clearSearch(): void {
-        const resultsEl = this.shadowRoot?.querySelector('output');
+        const resultsEl = this.getOutput();
         if (resultsEl != null) {
             resultsEl.innerHTML = "";
             resultsEl.hidden = true;
+        }
+        const inputEl = this.getInput();
+        if (inputEl != null) {
+            inputEl.value = "";
         }
     }
     async doSearch(): Promise<void> {

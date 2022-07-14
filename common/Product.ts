@@ -1,5 +1,4 @@
-import {ObjectId} from 'mongodb';
-
+import { ObjectId } from "mongodb";
 export class Product {
     _id: ObjectId = new ObjectId();
     name: string = "";

@@ -119,6 +119,20 @@ export class ProductDisplay extends HTMLElement {
     :host, :host * {
         box-sizing: border-box;
     }
+    .product-wrapper {
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: center;
+    }
+    .product-wrapper > product-gallery {
+        flex: 0 1 40%;
+    }
+    .product-wrapper > .product-info {
+        flex: 1 0 50%;
+    }
+    .product-wrapper > checkout-cart {
+        flex: 1 1 10%;
+    }
 `;
         this.shadowRoot.append(cssStyle);
         const id = `product-${this.#instanceId}`;
@@ -147,6 +161,8 @@ export class ProductDisplay extends HTMLElement {
             if (this.product.currentPrice > 0) {
                 const cart = document.createElement('checkout-cart');
                 cart.setAttribute('type', 'addto');
+                // TODO: Figure out sessions and all that
+                cart.setAttribute('data-cart-id', '62cf26a5991807ba4e49be67');
                 cart.setAttribute('data-product-id', this.productId);
                 wrapper.append(cart);
             }
