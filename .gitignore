@@ -70,8 +70,6 @@ dist
 *.sln
 *.sw?
 .DS_Store
-
-# Compiled files
 behavior.js
 behavior.js.map
 index.css
