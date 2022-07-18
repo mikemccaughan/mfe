@@ -6,19 +6,16 @@ import cors from 'cors';
 
 const schema = buildSchema(`
     input CartProductInput {
-        _id: String,
         _cartId: String,
         price: Float,
         quantity: Float
     }
     type CartProduct {
-        _id: String,
         _cartId: String,
         price: Float,
         quantity: Float
     }
     type Cart {
-        _id: String,
         products: [CartProduct]
     }
     type Query {
@@ -35,20 +32,18 @@ const client = new MongoClient('mongodb://127.0.0.1:27017/MFE');
 
 const root = {
     getCart: async (args) => {
-        let cursor = null;
         let results = null;
         try {
             await client.connect();
             const carts = client.db('MFE').collection('Carts');
             const query = { _id: ObjectId(args.id) };
-            cursor = carts.query(query);
-            results = (await cursor.toArray())?.at(0);
+            console.log(`Searching for cart with id "${args.id}"`);
+            results = await carts.findOne(query);
+            console.log(`Result of searching for cart with id "${args.id}": "${JSON.stringify(results, null, 2)}"`);
         } catch (e) {
             console.error(e);
+            throw e;
         } finally {
-            if (cursor) {
-                await cursor.close();
-            }
             if (client) {
                 await client.close();
             }
@@ -56,14 +51,13 @@ const root = {
         return results;
     },
     addToCart: async ({ product }) => {
-        let cursor = null;
         let results = null;
         try {
             await client.connect();
             const carts = client.db('MFE').collection('Carts');
             const query = { _id: ObjectId(product._cartId) };
-            cursor = carts.query(query);
-            results = (await cursor.toArray())?.at(0);
+            results = await carts.findOne(query);
+            console.log(`Result of searching for cart with id "${args.id}", before add: "${JSON.stringify(results, null, 2)}"`);
             const existingProduct = results.products.find(p => p._id.toString() === product._id.toString());
             let updateCart = {};
             if (existingProduct != null) {
@@ -78,12 +72,12 @@ const root = {
                 };    
             }
             await carts.updateOne(query, updateCart);
+            results = await carts.findOne(query);
+            console.log(`Result of searching for cart with id "${args.id}", after add: "${JSON.stringify(results, null, 2)}"`);
         } catch (e) {
             console.error(e);
+            throw e;
         } finally {
-            if (cursor) {
-                await cursor.close();
-            }
             if (client) {
                 await client.close();
             }
@@ -91,14 +85,13 @@ const root = {
         return results;
     },
     deleteFromCart: async ({ product }) => {
-        let cursor = null;
         let results = null;
         try {
             await client.connect();
             const carts = client.db('MFE').collection('Carts');
             const query = { _id: ObjectId(product._cartId) };
-            cursor = carts.query(query);
-            results = (await cursor.toArray())?.at(0);
+            results = await carts.findOne(query);
+            console.log(`Result of searching for cart with id "${args.id}", before delete: "${JSON.stringify(results, null, 2)}"`);
             const existingProduct = results.products.find(p => p._id.toString() === product._id);
             if (existingProduct === null) {
                 throw new Error('Could not find the product in the cart, so it will not be deleted');
@@ -117,12 +110,12 @@ const root = {
                 }
             }
             await carts.updateOne(query, updateCart);
+            results = await carts.findOne(query);
+            console.log(`Result of searching for cart with id "${args.id}", after delete: "${JSON.stringify(results, null, 2)}"`);
         } catch (e) {
             console.error(e);
+            throw e;
         } finally {
-            if (cursor) {
-                await cursor.close();
-            }
             if (client) {
                 await client.close();
             }
@@ -130,14 +123,13 @@ const root = {
         return results;
     },
     updateItemInCart: async ({product}) => {
-        let cursor = null;
         let results = null;
         try {
             await client.connect();
             const carts = client.db('MFE').collection('Carts');
             const query = { _id: ObjectId(product._cartId) };
-            cursor = carts.query(query);
-            results = (await cursor.toArray())?.at(0);
+            results = await carts.findOne(query);
+            console.log(`Result of searching for cart with id "${args.id}", before update: "${JSON.stringify(results, null, 2)}"`);
             const existingProduct = results.products.find(p => p._id.toString() === product._id);
             if (existingProduct === null) {
                 throw new Error('Could not find the product in the cart, so it will not be updated');
@@ -147,12 +139,12 @@ const root = {
                 $push: { products: product }
             };
             await carts.updateOne(query, updateCart);
+            results = await carts.findOne(query);
+            console.log(`Result of searching for cart with id "${args.id}", after update: "${JSON.stringify(results, null, 2)}"`);
         } catch (e) {
             console.error(e);
+            throw e;
         } finally {
-            if (cursor) {
-                await cursor.close();
-            }
             if (client) {
                 await client.close();
             }

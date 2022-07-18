@@ -1,7 +1,8 @@
 import { Cart, CartProduct } from "../../common/Cart.js";
 import { Product } from "../../common/Product.js";
 import { Utility } from "../../common/Utility.js";
-
+import { v4 as uuidv4 } from "uuid";
+import { ObjectId } from "bson";
 export class CheckoutCart extends HTMLElement {
     #instanceId: number = 0;
     #productUrl: string = "http://localhost:4001/product";
@@ -16,6 +17,15 @@ export class CheckoutCart extends HTMLElement {
     #cart: Cart | null = new Cart();
     #productId: string | null = null;
     #product: Product | null = null;
+
+    static moneyDisplayOpts = {
+        currency: "USD",
+        currencyDisplay: "narrowSymbol",
+        style: "currency",
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+        minimumSignificantDigits: 3
+    };
 
     get type(): string {
         return this.#type;
@@ -76,10 +86,11 @@ export class CheckoutCart extends HTMLElement {
             this.shadowRoot?.dispatchEvent(changedProduct);
         }
     }
-    get cartId(): string | null {
+    get cartId(): string {
+        this.#cartId ??= ObjectId.generate().toString('hex');
         return this.#cartId;
     }
-    set cartId(value: string | null) {
+    set cartId(value: string) {
         if (this.#cartId !== value) {
             this.#cartId = value;
             const changedCartId = new Event('cart-id-change', { cancelable: true, bubbles: true });
@@ -120,24 +131,182 @@ export class CheckoutCart extends HTMLElement {
             'data-cart-id', 'data-cartId', 'cart-id', 'cartId', 'CartId'
         ];
     }
+    getForm(): HTMLFormElement | null {
+        if (this.shadowRoot == null) {
+            console.warn('shadowRoot was null');
+            return null;
+        }
+        return this.shadowRoot.querySelector('.checkout-cart-product-container');
+    }
+    getCartIdInput(): HTMLInputElement | null {
+        if (this.shadowRoot == null) {
+            console.warn('shadowRoot was null');
+            return null;
+        }
+        return this.shadowRoot.querySelector('input[name="cartId"]');
+    }
+    getProductIdInput(): HTMLInputElement | null {
+        if (this.shadowRoot == null) {
+            console.warn('shadowRoot was null');
+            return null;
+        }
+        return this.shadowRoot.querySelector('input[name="productId"]');
+    }
+    getCsrf(): HTMLInputElement | null {
+        if (this.shadowRoot == null) {
+            console.warn('shadowRoot was null');
+            return null;
+        }
+        return this.shadowRoot.querySelector('input[name="CSRF"]');
+    }
+    getCsrfToken(): string {
+        return uuidv4();
+    }
+    getPriceContainer(): HTMLDivElement | null {
+        if (this.shadowRoot == null) {
+            console.warn('shadowRoot was null');
+            return null;
+        }
+        return this.shadowRoot.querySelector('.checkout-cart-product-price-container');
+    }
+    getOriginalPriceDisplay(): HTMLFieldSetElement | null {
+        if (this.shadowRoot == null) {
+            console.warn('shadowRoot was null');
+            return null;
+        }
+        return this.shadowRoot.querySelector('fieldset.checkout-cart-product-original-price');
+    }
+    getCurrentPriceDisplay(): HTMLFieldSetElement | null {
+        if (this.shadowRoot == null) {
+            console.warn('shadowRoot was null');
+            return null;
+        }
+        return this.shadowRoot.querySelector('fieldset.checkout-cart-product-current-price');
+    }
+    getSavingsDisplay(): HTMLFieldSetElement | null {
+        if (this.shadowRoot == null) {
+            console.warn('shadowRoot was null');
+            return null;
+        }
+        return this.shadowRoot.querySelector('fieldset.checkout-cart-product-savings');
+    }
+    getCartDisplay(): HTMLAnchorElement | null {
+        if (this.shadowRoot == null) {
+            console.warn('shadowRoot was null');
+            return null;
+        }
+        return this.shadowRoot.querySelector('a.checkout-cart-display-toggle');
+    }
+    getCartBadge(): HTMLAnchorElement | null {
+        if (this.shadowRoot == null) {
+            console.warn('shadowRoot was null');
+            return null;
+        }
+        return this.shadowRoot.querySelector('span.checkout-cart-display-badge');
+    }
     render() {
         switch (this.type) {
             case "addto":
-
+                const container = this.getForm() ?? document.createElement('form');
+                container.classList.add('checkout-cart-product-container');
+                container.method = this.#cartMethod;
+                container.id = `checkout-cart-add-to-cart-${this.#instanceId}`;
+                container.action = this.#cartUrl;
+                const csrf = this.getCsrf() ?? document.createElement('input');
+                csrf.type = 'hidden';
+                csrf.name = 'CSRF';
+                csrf.value = this.getCsrfToken();
+                container.append(csrf);
+                const cartIdInput = this.getCartIdInput() ?? document.createElement('input');
+                cartIdInput.type = 'hidden';
+                cartIdInput.name = 'cartId';
+                cartIdInput.value = this.#cartId ?? uuidv4().replace('-', '').substring(0, 24);
+                container.append(cartIdInput);
+                const productIdInput = this.getProductIdInput() ?? document.createElement('input');
+                productIdInput.type = 'hidden';
+                productIdInput.name = 'productId';
+                if (this.#productId == null || this.product == null) {
+                    throw new Error('productId is null');
+                }
+                productIdInput.value = this.#productId;
+                container.append(productIdInput);
+                const priceDisplay = this.getPriceContainer() ?? document.createElement('div');
+                priceDisplay.classList.add('checkout-cart-product-price-container');
+                priceDisplay.dataset.originalPrice = this.product.originalPrice.toLocaleString([], CheckoutCart.moneyDisplayOpts);
+                priceDisplay.dataset.currentPrice = this.product.currentPrice.toLocaleString([], CheckoutCart.moneyDisplayOpts);
+                priceDisplay.dataset.savings = (this.product.originalPrice - this.product.currentPrice).toLocaleString([], CheckoutCart.moneyDisplayOpts);
+                const originalPriceDisplay: HTMLFieldSetElement = this.getOriginalPriceDisplay() ?? document.createElement('fieldset');
+                originalPriceDisplay.classList.add('minimal', 'checkout-cart-product-original-price');
+                const originalPriceLabel: HTMLLabelElement = originalPriceDisplay.querySelector('label') ?? document.createElement('label');
+                originalPriceLabel.htmlFor = `originalPrice-${this.productId}`;
+                originalPriceLabel.textContent = 'List Price:'
+                originalPriceDisplay.append(originalPriceLabel);
+                const originalPriceValue: HTMLInputElement = originalPriceDisplay.querySelector(`#originalPrice-${this.productId}`) ?? document.createElement('input');
+                originalPriceValue.type = 'text';
+                originalPriceValue.readOnly = true;
+                originalPriceValue.disabled = true;
+                originalPriceValue.value = priceDisplay.dataset.originalPrice;
+                originalPriceValue.classList.add('view-only', 'not-applicable');
+                originalPriceDisplay.append(originalPriceValue);
+                priceDisplay.append(originalPriceDisplay);
+                const currentPriceDisplay: HTMLFieldSetElement = this.getCurrentPriceDisplay() ?? document.createElement('fieldset');
+                currentPriceDisplay.classList.add('minimal');
+                const currentPriceLabel: HTMLLabelElement = currentPriceDisplay.querySelector('label') ?? document.createElement('label');
+                currentPriceLabel.htmlFor = `currentPrice-${this.productId}`;
+                currentPriceLabel.textContent = 'List Price:'
+                currentPriceDisplay.append(currentPriceLabel);
+                const currentPriceValue: HTMLInputElement = currentPriceDisplay.querySelector(`#currentPrice-${this.productId}`) ?? document.createElement('input');
+                currentPriceValue.type = 'text';
+                currentPriceValue.readOnly = true;
+                currentPriceValue.disabled = true;
+                currentPriceValue.value = priceDisplay.dataset.currentPrice;
+                currentPriceValue.classList.add('view-only', 'current-price');
+                currentPriceDisplay.append(currentPriceValue);
+                priceDisplay.append(currentPriceDisplay);
+                const savingsDisplay: HTMLFieldSetElement = this.getSavingsDisplay() ?? document.createElement('fieldset');
+                savingsDisplay.classList.add('minimal');
+                const savingsLabel: HTMLLabelElement = savingsDisplay.querySelector('label') ?? document.createElement('label');
+                savingsLabel.htmlFor = `savings-${this.productId}`;
+                savingsLabel.textContent = 'List Price:'
+                savingsDisplay.append(savingsLabel);
+                const savingsValue: HTMLInputElement = savingsDisplay.querySelector(`#savings-${this.productId}`) ?? document.createElement('input');
+                savingsValue.type = 'text';
+                savingsValue.readOnly = true;
+                savingsValue.disabled = true;
+                savingsValue.value = `${priceDisplay.dataset.savings} (${((this.product.originalPrice - this.product.currentPrice) / this.product.originalPrice).toLocaleString([], { style: "percent" })})`;
+                savingsValue.classList.add('view-only', 'savings');
+                savingsDisplay.append(savingsValue);
+                priceDisplay.append(savingsDisplay);
                 break;
             case "header":
+                const cartDisplay: HTMLAnchorElement = this.getCartDisplay() ?? document.createElement('a');
+                cartDisplay.classList.add('checkout-cart-display-toggle');
+                cartDisplay.href = `#cart-${this.cartId ?? ''}`;
+                cartDisplay.dataset.cartId = this.cartId ?? undefined;
+                cartDisplay.textContent = '🛒';
+                this.shadowRoot?.append(cartDisplay);
+                const cartBadge: HTMLSpanElement = this.getCartBadge() ?? document.createElement('span');
+                cartBadge.classList.add('checkout-cart-display-badge');
+                cartBadge.textContent = this.cart?.products.length.toString() ?? "";
+                break;
+            case "flyout":
                 break;
             case "page":
                 break;
         }
     }
     addToCartMutationByGraphQL(product: CartProduct): any {
-        product._cartId ??= this.#cart ? this.#cart._id.toHexString() : null;
+        product.cart ??= this.#cart ?? null;
         return {
             query: `mutation AddToCart($input: CartProduct) {
                 addToCart(product: $input) {
                     _id,
-                    products
+                    products {
+                        _id
+                        _cartId
+                        price
+                        quantity
+                    }
                 }
             }`,
             variables: {
@@ -154,10 +323,15 @@ export class CheckoutCart extends HTMLElement {
         return {
             query: `query GetCart($id: String!) {
                 getCart(id: $id) {
+                  _id
+                  products {
                     _id
-                    products
+                    _cartId
+                    price
+                    quantity
+                  }
                 }
-            }`,
+              }`,
             variables: {
                 id: value
             }
@@ -192,10 +366,14 @@ export class CheckoutCart extends HTMLElement {
     }
     async addProductToCart(): Promise<void> {
         if (this.product == null) {
-            console.warn('No product selected to add to product?!?');
+            console.warn('No product selected to add to cart?!?');
             return;
         }
-        const value = new CartProduct(this.cart?._id.toHexString(), this.product);
+        if (this.cart == null) {
+            console.warn('No cart selected to which to add?!?');
+            return;
+        }
+        const value = new CartProduct(this.cart, this.product);
         const mutation = this.#cartUsesGraphQL ? this.addToCartMutationByGraphQL(value) : this.addToCartMutationByJson(value);
         const response = await fetch(this.#cartUrl, {
             method: this.#cartMethod,
@@ -230,7 +408,9 @@ export class CheckoutCart extends HTMLElement {
         });
         const result = (await response.json())?.data.getCart;
         this.cart = result;
-        this.render();
+        if (this.product != null) {
+            this.render();
+        }
     }
     async loadProduct(): Promise<void> {
         const value = this.productId;

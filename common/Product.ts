@@ -1,6 +1,5 @@
-import { ObjectId } from "mongodb";
+import { ObjectId } from "bson";
 export class Product {
-    _id: ObjectId = new ObjectId();
     name: string = "";
     description: string = "";
     originalPrice: number = 0;

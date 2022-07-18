@@ -4,7 +4,7 @@
   "description": "Playing around with MFE tech",
   "type": "module",
   "scripts": {
-    "start": "concurrently -k \"node --inspect=127.0.0.1:9229 product/service/product.js &\" \"node --inspect=127.0.0.1:9230 search/service/search.js &\" \"node --inspect=127.0.0.1:9231 checkout/service/cart.js &\" \"node --inspect=127.0.0.1:9232 static-server.mjs &\"",
+    "start": "concurrently -k \"node --inspect=127.0.0.1:9229 product/service/product.js &\" \"node --inspect=127.0.0.1:9231 checkout/service/cart.js &\" \"node --inspect=127.0.0.1:9232 static-server.mjs &\"",
     "build": "node esbuild.cjs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

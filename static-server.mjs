@@ -11,8 +11,18 @@ server.on('request', async (req, res) => {
     if (url.pathname.length <= 1) {
         localPath = path.resolve('index.html');
     } 
-    if (url.pathname.includes('mongodb')) {
+    if (url.pathname.includes('mongodb') || url.pathname.includes('bson')) {
         localPath = path.resolve(path.join('node_modules', 'bson', 'dist', 'bson.browser.esm.js'));
+    }
+    if (url.pathname.includes('uuid')) {
+        localPath = path.resolve(path.join('node_modules', 'uuid', 'wrapper.js'));
+    }
+    if (url.pathname.includes('dist/index.js')) {
+        localPath = path.resolve(path.join('node_modules', 'uuid', 'dist', 'esm-browseer', 'index.js'));
+    }
+    if (url.pathname.includes("uuid/dist")) {
+        const filename = url.pathname.substring(url.pathname.lastIndexOf('/') + 1);
+        localPath = path.resolve(path.join('node_modules', 'uuid', 'dist', 'esm-browser', filename));
     }
     console.log(`Attempting to read ${localPath}`);
     try {
